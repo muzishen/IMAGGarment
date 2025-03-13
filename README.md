@@ -1,1 +1,1 @@
-# IMAGDGarment-1
+# IMAGGarment-1
