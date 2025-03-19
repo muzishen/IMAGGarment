@@ -74,13 +74,13 @@ def prepare(args):
     generator = torch.Generator(device=args.device).manual_seed(42)
     
     #stage_1 prepare
-    vae = AutoencoderKL.from_pretrained("/opt/data/private/yj_data/huggingface/sd-vae-ft-mse").to(dtype=torch.float16, device=args.device)
-    tokenizer = CLIPTokenizer.from_pretrained("/opt/data/private/yj_data/huggingface/Realistic_Vision_V4.0_noVAE", subfolder="tokenizer")
-    text_encoder = CLIPTextModel.from_pretrained("/opt/data/private/yj_data/huggingface/Realistic_Vision_V4.0_noVAE", subfolder="text_encoder").to(
+    vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16, device=args.device)
+    tokenizer = CLIPTokenizer.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="tokenizer")
+    text_encoder = CLIPTextModel.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="text_encoder").to(
         dtype=torch.float16, device=args.device)
-    unet = UNet2DConditionModel.from_pretrained("/opt/data/private/yj_data/huggingface/Realistic_Vision_V4.0_noVAE", subfolder="unet").to(
+    unet = UNet2DConditionModel.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="unet").to(
         dtype=torch.float16,device=args.device)
-    image_encoder  = CLIPVisionModelWithProjection.from_pretrained("/opt/data/private/hugging_face/IP-Adapter/ipa_encoder").to(
+    image_encoder  = CLIPVisionModelWithProjection.from_pretrained("h94/IP-Adapter",subfolder ="models/image_encoder").to(
         dtype=torch.float16, device=args.device)
 
     # set attention processor
@@ -106,7 +106,7 @@ def prepare(args):
     adapter_modules = adapter_modules.to(dtype=torch.float16, device=args.device)
     del st
 
-    ref_unet = UNet2DConditionModel.from_pretrained("/opt/data/private/yj_data/huggingface/Realistic_Vision_V4.0_noVAE", subfolder="unet").to(
+    ref_unet = UNet2DConditionModel.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="unet").to(
         dtype=torch.float16,
         device=args.device)
     attn_procs2 = {}
@@ -162,7 +162,7 @@ def prepare(args):
     
     
     #stage_2 prepare
-    base_model_path = "/opt/data/private/yj_data/huggingface/stable-diffusion-inpainting"
+    base_model_path = "ruwnayml/stable-diffusion-inpainting"
     attn_ckpt = args.stage2_model_ckpt
     stage2_unet = UNet2DConditionModel.from_pretrained(base_model_path, subfolder="unet").to(device=args.device,dtype=torch.float16)
     stage2_noise_scheduler = DDIMScheduler.from_pretrained(base_model_path, subfolder="scheduler")
