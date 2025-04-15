@@ -15,16 +15,15 @@ import argparse
 from adapter.resampler import Resampler
 
 
-def preprocess(cloth , logo ,mask ,height ,width):
+def preprocess( logo ,mask ,height ,width):
     vae_processor = VaeImageProcessor(vae_scale_factor=8) 
     mask_processor = VaeImageProcessor(vae_scale_factor=8, do_normalize=False, do_binarize=True, do_convert_grayscale=True)
     
-    cloth = vae_processor.preprocess(cloth, height, width)[0]
     logo = vae_processor.preprocess(logo, height, width)[0]
     mask = mask_processor.preprocess(mask, height, width)[0]
     
     
-    return cloth,logo,mask
+    return logo,mask
 def back_to_pic(logo,mask):
 
     if logo.min() < 0:
@@ -184,7 +183,6 @@ if __name__ == "__main__":
     parser.add_argument('--stage2_model_ckpt',type=str)
     parser.add_argument('--prompt',type=str,default="A cloth")
     parser.add_argument('--sketch_path', type=str, required=True)
-    parser.add_argument('--cloth_path', type=str, required=True)
     parser.add_argument('--logo_path', type=str, required=True)
     parser.add_argument('--mask_path', type=str, required=True)
     parser.add_argument('--color_path',type=str,required=True)
@@ -233,18 +231,15 @@ if __name__ == "__main__":
     
     #单图片
     prompt = args.prompt
-    prompt = prompt + ', best quality, high quality'
     null_prompt = ''
-    negative_prompt = 'bare, naked, nude, undressed, monochrome, lowres, bad anatomy, worst quality, low quality'
+    negative_prompt = ' worst quality, low quality'
 
-    
-    cloth = Image.open(args.cloth_path).convert('RGB')
     
     
     sketch_img = Image.open(args.sketch_path).convert("RGB")
     sketch_img = resize_img(sketch_img)
     vae_sketch = img_transform(sketch_img).unsqueeze(0)
-    _ , logo ,mask = preprocess(Image.open(args.cloth_path),Image.open(args.logo_path),Image.open(args.mask_path),args.height,args.width)
+    logo ,mask = preprocess(Image.open(args.logo_path),Image.open(args.mask_path),args.height,args.width)
     logo,mask = back_to_pic(logo,mask)
     
     if args.color_path is not None:
@@ -279,11 +274,9 @@ if __name__ == "__main__":
     save_output.insert(0, sketch_img.resize((512, 640), Image.BICUBIC))
     
     
-    cloth = resize_img(cloth)
-    save_output.insert(1, cloth.resize((512,640),Image.BICUBIC))
     save_output.insert(1, Image.open(args.logo_path).convert('RGB').resize((512,640),Image.BICUBIC))
     save_output.insert(1, Image.open(args.mask_path).resize((512,640),Image.BICUBIC))
-    grid = image_grid(save_output, 1, 6)
+    grid = image_grid(save_output, 1, 5)
     grid.save(
         output_path + '/' + args.sketch_path.split("/")[-1])
     
