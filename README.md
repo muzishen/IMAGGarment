@@ -12,8 +12,8 @@ In the second stage, we present a local enhancement model with an adaptive appea
 ![architecture](./assets/architecture.png)
 
 ## 🚀 Dataset Demo
-You can download the datase from [百度云]().
-![dataset_demo](./assets/dataset_sample_v4.png)
+
+![dataset_demo](./assets/dataset_sample_v4-1.png)
 ## 🚀 Examples
 
 ![results_1](./assets/introductionv3.png)
@@ -84,8 +84,8 @@ If you find IMAGGarment-1 useful for your research and applications, please cite
 - [x] Paper
 - [x] Train Code
 - [x] Inference Code
-- [x] GarmentBench Dataset
+- [ ] GarmentBench Dataset
 - [x] Model Weights
 - [ ] Upgraded Version for High-resolution Image
 ## 📨 Contact
-If you have any questions, please feel free to contact with me at shenfei140721@126.com.
+If you have any questions, please feel free to contact with us at shenfei140721@126.com, jianyu@njust.edu.cn.
