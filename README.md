@@ -4,10 +4,10 @@
 
 - [2025/4/16] 🎉 We release the train and inference code of IMAGGarment-1.
 
-## 👕🏷️🎨 IMAGGarment-1: Controllable Fashion Design
+##  IMAGGarment-1: Controllable Fashion Design
 
 
-### 🔑 Key Part:
+### 🔑 Key Parts:
 1.
 2.
 3.
@@ -40,7 +40,7 @@ pip install -r requirements.txt
 ```
 ## 🌐 Download Models
 
-You can download our models from  [百度云](). You can download the other component models from the original repository, as follows.
+You can download our models from [百度云](). You can download the other component models from the original repository, as follows.
 - stabilityai/sd-vae-ft-mse(https://huggingface.co/stabilityai/sd-vae-ft-mse)
 - if train: [stable-diffusion-v1-5/stable-diffusion-v1-5](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5), if test: [SG161222/Realistic_Vision_V4.0_noVAE](https://huggingface.co/SG161222/Realistic_Vision_V4.0_noVAE)
 - [h94/IP-Adapter](https://huggingface.co/h94/IP-Adapter)
@@ -78,6 +78,9 @@ If you find IMAGGarment-1 useful for your research and applications, please cite
 ```
 ```
 ## 🕒 TODO List
-- [  ]
+- [x] Paper
+- [x] Train Code
+- [x] Inference Code
+- [x] GarmentBench Dataset
 ## 📨 Contact
 If you have any questions, please feel free to contact with me at shenfei140721@126.com.
