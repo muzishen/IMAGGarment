@@ -34,6 +34,9 @@ In the second stage, we present a local enhancement model with an adaptive appea
   <img src="./assets/appendix1-1.png" alt="results_2" width="800" height="400"/>
 </p>
 
+<p align="center">
+  <img src="./assets/appendix1-2.png" alt="results_2" width="800" height="400"/>
+</p>
 
 
 ## 🔧 Requirements
