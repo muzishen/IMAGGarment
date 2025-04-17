@@ -46,14 +46,16 @@ You can download our models from [百度云](). You can download the other compo
 ```
 # Please download the GarmentBench data first 
 # and modify the path in train_color_adapter.sh, train_stage1.sh and train_stage2.sh
+
 # train color adapter
 sh train_color_adapter.sh
 # Once training of color adapter is complete, you can convert the weights into the desired format.
 python change.py
-# train stage1 model
-sh train_stage1.sh
-# train stage2 model
-sh train_stage2.sh
+
+# train GAM model
+sh train_GAM.sh
+# train LEM model
+sh train_LEM.sh
 ```
 ## 🚀 How to test
 ```
