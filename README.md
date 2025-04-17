@@ -1,4 +1,4 @@
-# <img src="./assets/logo.png" alt="Logo" width="40" height="30"/>IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design
+# <img src="./assets/logo.png" alt="Logo" width="30" height="30"/>IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design
 
 ## 🗓️ Release
 
