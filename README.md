@@ -18,10 +18,15 @@ In the second stage, we present a local enhancement model with an adaptive appea
 
 ![results_1](./assets/introductionv3.png)
 
-<!--<p align="center">
+### More Results
+<p align="center">
   <img src="./assets/appendix1-1.png" alt="results_2" width="400" height="400"/>
-</p> -->
+</p>
 
+### Different Silhouettes and Colors
+<p align="center">
+  <img src="./assets/appendix2v2-1.png" alt="results_2" width="400" height="400"/>
+</p>
 ## 🔧 Requirements
 
 - Python>=3.8
