@@ -104,8 +104,7 @@ def collate_fn(data):
     }
     
 
-class IPAdapter(torch.nn.Module):
-    """IP-Adapter"""
+class ColorAdapter(torch.nn.Module):
     def __init__(self, unet, image_proj_model, adapter_modules, ckpt_path=None):
         super().__init__()
         self.unet = unet
@@ -116,29 +115,29 @@ class IPAdapter(torch.nn.Module):
             self.load_from_checkpoint(ckpt_path)
 
     def forward(self, noisy_latents, timesteps, encoder_hidden_states, image_embeds):
-        ip_tokens = self.image_proj_model(image_embeds)
-        encoder_hidden_states = torch.cat([encoder_hidden_states, ip_tokens], dim=1)
+        tokens = self.image_proj_model(image_embeds)
+        encoder_hidden_states = torch.cat([encoder_hidden_states, tokens], dim=1)
         # Predict the noise residual
         noise_pred = self.unet(noisy_latents, timesteps, encoder_hidden_states).sample
         return noise_pred
 
     def load_from_checkpoint(self, ckpt_path: str):
         # Calculate original checksums
-        orig_ip_proj_sum = torch.sum(torch.stack([torch.sum(p) for p in self.image_proj_model.parameters()]))
+        orig_proj_sum = torch.sum(torch.stack([torch.sum(p) for p in self.image_proj_model.parameters()]))
         orig_adapter_sum = torch.sum(torch.stack([torch.sum(p) for p in self.adapter_modules.parameters()]))
 
         state_dict = torch.load(ckpt_path, map_location="cpu")
 
         # Load state dict for image_proj_model and adapter_modules
         self.image_proj_model.load_state_dict(state_dict["image_proj"], strict=True)
-        self.adapter_modules.load_state_dict(state_dict["ip_adapter"], strict=True)
+        self.adapter_modules.load_state_dict(state_dict["color_adapter"], strict=True)
 
         # Calculate new checksums
-        new_ip_proj_sum = torch.sum(torch.stack([torch.sum(p) for p in self.image_proj_model.parameters()]))
+        new_proj_sum = torch.sum(torch.stack([torch.sum(p) for p in self.image_proj_model.parameters()]))
         new_adapter_sum = torch.sum(torch.stack([torch.sum(p) for p in self.adapter_modules.parameters()]))
 
         # Verify if the weights have changed
-        assert orig_ip_proj_sum != new_ip_proj_sum, "Weights of image_proj_model did not change!"
+        assert orig_proj_sum != new_proj_sum, "Weights of image_proj_model did not change!"
         assert orig_adapter_sum != new_adapter_sum, "Weights of adapter_modules did not change!"
 
         print(f"Successfully loaded weights from checkpoint {ckpt_path}")
@@ -155,10 +154,10 @@ def parse_args():
         help="Path to pretrained model or model identifier from huggingface.co/models.",
     )
     parser.add_argument(
-        "--pretrained_ip_adapter_path",
+        "--pretrained_color_adapter_path",
         type=str,
         default=None,
-        help="Path to pretrained ip adapter model. If not specified weights are initialized randomly.",
+        help="Path to pretrained color adapter model. If not specified weights are initialized randomly.",
     )
     parser.add_argument(
         "--data_json_file",
@@ -184,7 +183,7 @@ def parse_args():
     parser.add_argument(
         "--output_dir",
         type=str,
-        default="sd-ip_adapter",
+        default="output",
         help="The output directory where the model predictions and checkpoints will be written.",
     )
     parser.add_argument(
@@ -290,7 +289,6 @@ def main():
     text_encoder.requires_grad_(False)
     image_encoder.requires_grad_(False)
     
-    #ip-adapter
     image_proj_model = ImageProjModel(
         cross_attention_dim=unet.config.cross_attention_dim,
         clip_embeddings_dim=image_encoder.config.projection_dim,
@@ -322,7 +320,7 @@ def main():
     unet.set_attn_processor(attn_procs)
     adapter_modules = torch.nn.ModuleList(unet.attn_processors.values())
     
-    ip_adapter = IPAdapter(unet, image_proj_model, adapter_modules, args.pretrained_ip_adapter_path)
+    color_adapter = ColorAdapter(unet, image_proj_model, adapter_modules, args.pretrained_color_adapter_path)
     
     weight_dtype = torch.float32
     if accelerator.mixed_precision == "fp16":
@@ -335,7 +333,7 @@ def main():
     image_encoder.to(accelerator.device, dtype=weight_dtype)
     
     # optimizer
-    params_to_opt = itertools.chain(ip_adapter.image_proj_model.parameters(),  ip_adapter.adapter_modules.parameters())
+    params_to_opt = itertools.chain(color_adapter.image_proj_model.parameters(),  color_adapter.adapter_modules.parameters())
     optimizer = torch.optim.AdamW(params_to_opt, lr=args.learning_rate, weight_decay=args.weight_decay)
     
     # dataloader
@@ -349,14 +347,14 @@ def main():
     )
     
     # Prepare everything with our `accelerator`.
-    ip_adapter, optimizer, train_dataloader = accelerator.prepare(ip_adapter, optimizer, train_dataloader)
+    color_adapter, optimizer, train_dataloader = accelerator.prepare(color_adapter, optimizer, train_dataloader)
     
     global_step = 0
     for epoch in range(0, args.num_train_epochs):
         begin = time.perf_counter()
         for step, batch in enumerate(train_dataloader):
             load_data_time = time.perf_counter() - begin
-            with accelerator.accumulate(ip_adapter):
+            with accelerator.accumulate(color_adapter):
                 # Convert images to latent space
                 with torch.no_grad():
                     latents = vae.encode(batch["images"].to(accelerator.device, dtype=weight_dtype)).latent_dist.sample()
@@ -386,7 +384,7 @@ def main():
                 with torch.no_grad():
                     encoder_hidden_states = text_encoder(batch["text_input_ids"].to(accelerator.device))[0]
                 
-                noise_pred = ip_adapter(noisy_latents, timesteps, encoder_hidden_states, image_embeds)
+                noise_pred = color_adapter(noisy_latents, timesteps, encoder_hidden_states, image_embeds)
         
                 loss = F.mse_loss(noise_pred.float(), noise.float(), reduction="mean")
             

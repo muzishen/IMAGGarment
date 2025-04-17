@@ -34,7 +34,7 @@ from adapter.attention_processor import SkipAttnProcessor,SAttnProcessor2_0 as A
 from .resampler import Resampler
 
 
-class Stage2:
+class LEM:
     def __init__(self, unet,vae, attn_ckpt,noise_scheduler,device,weight_dtype = torch.float16):
         self.device = device
         self.unet = unet.to(self.device)

@@ -59,15 +59,15 @@ sh train_stage2.sh
 ##### How to test
 ```
 python inference_logo.py \
---stage1_model_ckpt [stage1 checkpoint] \
---stage2_model_ckpt [stage2 chekcpoint] \
+--GAM_model_ckpt [GAM checkpoint] \
+--LEM_model_ckpt [LEM chekcpoint] \
 --sketch_path [your sketch path] \
 --logo_path [your logo path] \
 --mask_path [your mask path] \
 --color_path [your color path] \
 --prompt [your prompt] \
 --output_path [your save path] \
---ip_ckpt [color adapter checkpoint] \
+--color_ckpt [color adapter checkpoint] \
 --device [your device]
 ```
 ##### Acknowledgement

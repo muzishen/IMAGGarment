@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
 from adapter.resampler import Resampler
-from Logo_dataset import VDDataset, collate_fn
+from Logo_dataset import FGGDataset, collate_fn
 from adapter.attention_processor import LogoCacheSAttnProcessor2_0,  CAttnProcessor2_0, LogoRefSAttnProcessor2_0,LogoCacheCAttnProcessor2_0
 
 logger = get_logger(__name__)
@@ -234,8 +234,8 @@ def compute_snr(noise_scheduler, timesteps):
     return snr
 
 
-class SDModel(torch.nn.Module):
-    """SD model with image prompt"""
+class GAModel(torch.nn.Module):
+    """GAM model with image prompt"""
 
     def __init__(self, unet, ref_unet, adapter_modules) -> None:
         super().__init__()
@@ -313,13 +313,9 @@ def main():
     unet = UNet2DConditionModel.from_pretrained(args.pretrained_model_name_or_path, subfolder="unet")
     vae = AutoencoderKL.from_pretrained(args.pretrained_vae_model_path)
 
-
-
     # set attention processor
     attn_procs = {}
     st = unet.state_dict()
-    
-
     
     for name in unet.attn_processors.keys():
         cross_attention_dim = None if name.endswith("attn1.processor") else unet.config.cross_attention_dim
@@ -373,22 +369,20 @@ def main():
             
     ref_unet.set_attn_processor(attn_procs2)
     del st
-    
-    
+
     # Freeze vae and text_encoder
     vae.requires_grad_(False)
     text_encoder.requires_grad_(False)
     unet.requires_grad_(False)
     ref_unet.requires_grad_(True)
     adapter_modules.requires_grad_(True)
-    sd_model = SDModel(unet, ref_unet, adapter_modules)
+    gam_model = GAModel(unet, ref_unet, adapter_modules)
 
-
-    params_to_opt = itertools.chain( sd_model.ref_unet.parameters(),
-                                    sd_model.adapter_modules.parameters())
+    params_to_opt = itertools.chain( gam_model.ref_unet.parameters(),
+                                    gam_model.adapter_modules.parameters())
     accelerator.print("Trainable parameters:  ref_unet:{:.2f}M, adapter_modules:{:.2f}M".format(
-        count_model_params(sd_model.ref_unet),
-        count_model_params(sd_model.adapter_modules)))
+        count_model_params(gam_model.ref_unet),
+        count_model_params(gam_model.adapter_modules)))
     # accelerator.print("Trainable parameters: {:.2f}M".format(len(params_to_opt)))
     # Creates Dummy Optimizer if `optimizer` was specified in the config file else creates Adam Optimizer
     if (
@@ -411,7 +405,7 @@ def main():
         timestep_spacing="trailing", prediction_type="epsilon",
     )
 
-    dataset = VDDataset(
+    dataset = FGGDataset(
         [
             args.dataset_json_path,
         ],
@@ -455,7 +449,7 @@ def main():
     ):
         accelerator.state.deepspeed_plugin.deepspeed_config["train_micro_batch_size_per_gpu"] = args.train_batch_size
 
-    sd_model, optimizer, lr_scheduler = accelerator.prepare(sd_model, optimizer, lr_scheduler)
+    gam_model, optimizer, lr_scheduler = accelerator.prepare(gam_model, optimizer, lr_scheduler)
 
     weight_dtype = torch.float32
     if accelerator.state.deepspeed_plugin is None:
@@ -505,7 +499,7 @@ def main():
         # New Code #
         # Loads the DeepSpeed checkpoint from the specified path
         last_epoch, last_global_step = load_training_checkpoint(
-            sd_model,
+            gam_model,
             args.resume_from_checkpoint,
             **{"load_optimizer_states": True, "load_lr_scheduler_states": True},
         )
@@ -562,7 +556,7 @@ def main():
                 )
             
 
-            model_pred = sd_model(encoder_hidden_states, noisy_latents, ref_latents,  timesteps)
+            model_pred = gam_model(encoder_hidden_states, noisy_latents, ref_latents,  timesteps)
 
             if args.snr_gamma == 0:
 
@@ -616,7 +610,7 @@ def main():
             # checkpoint
             if isinstance(checkpointing_steps, int):
                 if global_steps % checkpointing_steps == 0:
-                    checkpoint_model(args.output_dir, global_steps, sd_model, epoch, global_steps)
+                    checkpoint_model(args.output_dir, global_steps, gam_model, epoch, global_steps)
 
             # stop training
             if global_steps >= args.max_train_steps:
@@ -625,7 +619,7 @@ def main():
 
     accelerator.wait_for_everyone()
     # Save last model
-    checkpoint_model(args.output_dir, global_steps, sd_model, epoch, global_steps)
+    checkpoint_model(args.output_dir, global_steps, gam_model, epoch, global_steps)
 
     accelerator.end_training()
 

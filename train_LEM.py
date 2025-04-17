@@ -96,7 +96,7 @@ def collate_fn(data):
     }
     
 
-class Stage2(torch.nn.Module):
+class LEM(torch.nn.Module):
     def __init__(self, unet,attn_block, ckpt_path=None):
         super().__init__()
         self.unet = unet
@@ -334,7 +334,7 @@ def main():
                     attn_sd[k.replace('attn_block.','')] = sd_state[k]
             attn_blocks.load_state_dict(attn_sd)
    
-    stage2 = Stage2(unet,attn_blocks)
+    lem = LEM(unet,attn_blocks)
     
     weight_dtype = torch.float32
     if accelerator.mixed_precision == "fp16":
@@ -345,7 +345,7 @@ def main():
     vae.to(accelerator.device, dtype=weight_dtype)
     
     # optimizer
-    params_to_opt = itertools.chain(stage2.attn_block.parameters())
+    params_to_opt = itertools.chain(lem.attn_block.parameters())
     optimizer = torch.optim.AdamW(params_to_opt, lr=args.learning_rate, weight_decay=args.weight_decay)
     
     # dataloader
@@ -359,14 +359,14 @@ def main():
     )
     
     # Prepare everything with our `accelerator`.
-    stage2, optimizer, train_dataloader = accelerator.prepare(stage2, optimizer, train_dataloader)
+    lem, optimizer, train_dataloader = accelerator.prepare(lem, optimizer, train_dataloader)
     
     global_step = 0
     for epoch in range(0, args.num_train_epochs):
         begin = time.perf_counter()
         for step, batch in enumerate(train_dataloader):
             load_data_time = time.perf_counter() - begin
-            with accelerator.accumulate(stage2):
+            with accelerator.accumulate(lem):
                 
                 #prepar image
                 concat_dim = -2  # FIXME: y axis concat
@@ -417,7 +417,7 @@ def main():
                 
                 #concat  in channel
                 inpainting_latent_model_input = torch.cat([noisy_latents, mask_latent_concat, masked_latent_concat], dim=1)
-                noise_pred = stage2(inpainting_latent_model_input, timesteps)
+                noise_pred = lem(inpainting_latent_model_input, timesteps)
         
                 loss = F.mse_loss(noise_pred.float(), noise.float(), reduction="mean")
 

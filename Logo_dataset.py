@@ -9,7 +9,7 @@ import os
 from random import choice
 
 
-class VDDataset(Dataset):
+class FGGDataset(Dataset):
     def __init__(
             self,
             json_file,

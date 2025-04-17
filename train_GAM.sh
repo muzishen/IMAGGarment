@@ -1,7 +1,7 @@
 export HOST_NUM=1
 accelerate launch --gpu_ids 0,1,2,3 --use_deepspeed --num_processes 4  --main_process_port 12012\
   --deepspeed_config_file zero_stage2_config.json \
-  train_stage1.py \
+  train_GAM.py \
   --pretrained_model_name_or_path="/path_to/stable-diffusion-v1-5" \
   --pretrained_vae_model_path="/path_to/sd-vae-ft-mse" \
   --dataset_json_path="/path_to/GarmentBench/sketch_pair.json" \

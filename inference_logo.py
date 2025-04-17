@@ -1,5 +1,5 @@
 from pipelines.IMAGGarment_pipeline import IMAGGarment
-from pipelines.stage2_pipeline import Stage2
+from pipelines.LEM_pipeline import LEM
 import os
 import torch
 
@@ -72,7 +72,7 @@ def image_grid(imgs, rows, cols):
 def prepare(args):
     generator = torch.Generator(device=args.device).manual_seed(42)
     
-    #stage_1 prepare
+    #GAM prepare
     vae = AutoencoderKL.from_pretrained("stabilityai/sd-vae-ft-mse").to(dtype=torch.float16, device=args.device)
     tokenizer = CLIPTokenizer.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="tokenizer")
     text_encoder = CLIPTextModel.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="text_encoder").to(
@@ -104,6 +104,7 @@ def prepare(args):
     adapter_modules = torch.nn.ModuleList(unet.attn_processors.values())
     adapter_modules = adapter_modules.to(dtype=torch.float16, device=args.device)
     del st
+    
 
     ref_unet = UNet2DConditionModel.from_pretrained("SG161222/Realistic_Vision_V4.0_noVAE", subfolder="unet").to(
         dtype=torch.float16,
@@ -131,7 +132,7 @@ def prepare(args):
     del st
     ref_unet.to(dtype=torch.float16,device=args.device)
     # weights load
-    model_sd = torch.load(args.stage1_model_ckpt, map_location="cpu")["module"]
+    model_sd = torch.load(args.GAM_model_ckpt, map_location="cpu")["module"]
 
     ref_unet_dict = {}
     unet_dict = {}
@@ -160,18 +161,18 @@ def prepare(args):
     )
     
     
-    #stage_2 prepare
+    #LEM prepare
     base_model_path = "ruwnayml/stable-diffusion-inpainting"
-    attn_ckpt = args.stage2_model_ckpt
-    stage2_unet = UNet2DConditionModel.from_pretrained(base_model_path, subfolder="unet").to(device=args.device,dtype=torch.float16)
-    stage2_noise_scheduler = DDIMScheduler.from_pretrained(base_model_path, subfolder="scheduler")
-    stage2_pipeline = Stage2(stage2_unet,vae,attn_ckpt,stage2_noise_scheduler,args.device)
+    attn_ckpt = args.LEM_model_ckpt
+    LEM_unet = UNet2DConditionModel.from_pretrained(base_model_path, subfolder="unet").to(device=args.device,dtype=torch.float16)
+    LEM_noise_scheduler = DDIMScheduler.from_pretrained(base_model_path, subfolder="scheduler")
+    LEM_pipeline = LEM(LEM_unet,vae,attn_ckpt,LEM_noise_scheduler,args.device)
     
     pipe = IMAGGarment(unet=unet, reference_unet=ref_unet, vae=vae, tokenizer=tokenizer,
                          text_encoder=text_encoder, image_encoder=image_encoder,
-                         ip_ckpt=args.ip_ckpt,
+                         color_ckpt=args.color_ckpt,
                          scheduler=noise_scheduler,
-                         stage2=stage2_pipeline,
+                         lem=LEM_pipeline,
                          safety_checker=StableDiffusionSafetyChecker,
                          feature_extractor=CLIPImageProcessor)
     return pipe, generator
@@ -179,15 +180,15 @@ def prepare(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='IMAGGarment')
-    parser.add_argument('--stage1_model_ckpt',type=str)
-    parser.add_argument('--stage2_model_ckpt',type=str)
+    parser.add_argument('--GAM_model_ckpt',type=str)
+    parser.add_argument('--LEM_model_ckpt',type=str)
     parser.add_argument('--prompt',type=str,default="A cloth")
     parser.add_argument('--sketch_path', type=str, required=True)
     parser.add_argument('--logo_path', type=str, required=True)
     parser.add_argument('--mask_path', type=str, required=True)
     parser.add_argument('--color_path',type=str,required=True)
     parser.add_argument('--output_path', type=str, default="./output_sd_base")
-    parser.add_argument('--ip_ckpt', type=str, required=True)
+    parser.add_argument('--color_ckpt', type=str, required=True)
 
     parser.add_argument('--device', type=str, default="cuda:0")
     parser.add_argument(
@@ -234,8 +235,6 @@ if __name__ == "__main__":
     null_prompt = ''
     negative_prompt = ' worst quality, low quality'
 
-    
-    
     sketch_img = Image.open(args.sketch_path).convert("RGB")
     sketch_img = resize_img(sketch_img)
     vae_sketch = img_transform(sketch_img).unsqueeze(0)
@@ -260,9 +259,9 @@ if __name__ == "__main__":
         width=512,
         height=640,
         num_images_per_prompt=num_samples,
-        guidance_scale=2.5,
-        sketch_scale=0.7,
-        ipa_scale=0.0,
+        guidance_scale=7.0,
+        sketch_scale=0.6,
+        ipa_scale=1.0,
         generator=generator,
         num_inference_steps=50,
 

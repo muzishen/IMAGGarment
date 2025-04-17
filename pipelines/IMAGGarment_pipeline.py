@@ -12,7 +12,7 @@ from diffusers.pipelines.stable_diffusion.pipeline_stable_diffusion import *
 from adapter.attention_processor import LogoRefSAttnProcessor2_0,IPAttnProcessor2_0
 # from diffusers.pipelines import StableDiffusionPipeline
 from diffusers.loaders import LoraLoaderMixin
-from .stage2_pipeline import Stage2
+from .LEM_pipeline import LEM
 import os 
 import sys
 import torch 
@@ -49,8 +49,8 @@ class IMAGGarment(StableDiffusionPipeline):
             tokenizer,
             text_encoder,
             image_encoder,
-            ip_ckpt,
-            stage2,
+            color_ckpt,
+            lem,
             scheduler: Union[
                 DDIMScheduler,
                 PNDMScheduler,
@@ -86,13 +86,13 @@ class IMAGGarment(StableDiffusionPipeline):
             do_convert_rgb=True,
             do_normalize=False,
         )
-        self.stage2 = stage2
+        self.lem = lem
         
-        #IPA
-        self.ip_ckpt = ip_ckpt
+        #color adapter
+        self.color_ckpt = color_ckpt
         self.num_tokens = 4
         self.image_proj_model = self.init_proj()
-        self.load_ip_adapter()
+        self.load_color_adapter()
         
     def init_proj(self):
         
@@ -103,20 +103,20 @@ class IMAGGarment(StableDiffusionPipeline):
         ).to(self.device, dtype=torch.float16)
         return image_proj_model
     
-    def load_ip_adapter(self):
-        if os.path.splitext(self.ip_ckpt)[-1] == ".safetensors":
-            state_dict = {"image_proj": {}, "ip_adapter": {}}
-            with safe_open(self.ip_ckpt, framework="pt", device="cpu") as f:
+    def load_color_adapter(self):
+        if os.path.splitext(self.color_ckpt)[-1] == ".safetensors":
+            state_dict = {"image_proj": {}, "color_adapter": {}}
+            with safe_open(self.color_ckpt, framework="pt", device="cpu") as f:
                 for key in f.keys():
                     if key.startswith("image_proj."):
                         state_dict["image_proj"][key.replace("image_proj.", "")] = f.get_tensor(key)
-                    elif key.startswith("ip_adapter."):
-                        state_dict["ip_adapter"][key.replace("ip_adapter.", "")] = f.get_tensor(key)
+                    elif key.startswith("color_adapter."):
+                        state_dict["color_adapter"][key.replace("color_adapter.", "")] = f.get_tensor(key)
         else:
-            state_dict = torch.load(self.ip_ckpt, map_location="cpu")
+            state_dict = torch.load(self.color_ckpt, map_location="cpu")
         self.image_proj_model.load_state_dict(state_dict["image_proj"])
         ip_layers = torch.nn.ModuleList(self.unet.attn_processors.values())
-        ip_layers.load_state_dict(state_dict["ip_adapter"], strict=False)
+        ip_layers.load_state_dict(state_dict["color_adapter"], strict=False)
     @property
     def cross_attention_kwargs(self):
         return self._cross_attention_kwargs
@@ -589,9 +589,9 @@ class IMAGGarment(StableDiffusionPipeline):
                         step_idx = i // getattr(self.scheduler, "order", 1)
                         callback(step_idx, t, latents)
 
-       # Convey image latents and other condition to second stage pipeline
+       # Convey image latents and other condition to LEM pipeline
 
-        image = self.stage2.generate(
+        image = self.lem.generate(
                         image=latents,
                         condition_image=logo,
                         mask=mask,
