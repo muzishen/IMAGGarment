@@ -18,15 +18,23 @@ In the second stage, we present a local enhancement model with an adaptive appea
 
 ![results_1](./assets/introductionv3.png)
 
+
+### Different Colors and Silhouettes
+<p align="center">
+  <img src="./assets/app1-1.png" alt="results_2" width="800" height="400"/>
+</p>
+
+<p align="center">
+  <img src="./assets/app1-2.png" alt="results_2" width="800" height="400"/>
+</p>
+
+
 ### More Results
 <p align="center">
   <img src="./assets/appendix1-1.png" alt="results_2" width="800" height="400"/>
 </p>
 
-### Different Silhouettes and Colors
-<p align="center">
-  <img src="./assets/appendix2v2-1.png" alt="results_2" width="400" height="400"/>
-</p>
+
 
 ## 🔧 Requirements
 
