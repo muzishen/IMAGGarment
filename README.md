@@ -12,6 +12,7 @@ In the second stage, we present a local enhancement model with an adaptive appea
 ![architecture](./assets/architecture.png)
 
 ## 🚀 Dataset Demo
+You can download the datase from [百度云]().
 ![dataset_demo](./assets/dataset_sample_v4.png)
 ## 🚀 Examples
 
@@ -36,7 +37,7 @@ pip install -r requirements.txt
 ```
 ## 🌐 Download Models
 
-You can download our models from [百度云](). You can download the other component models from the original repository, as follows.
+You can download our models from [百度云](https://pan.baidu.com/s/1_nlOTiLqeRYBNb0w0249vQ?pwd=ky3q#list/path=%2F). You can download the other component models from the original repository, as follows.
 - stabilityai/sd-vae-ft-mse(https://huggingface.co/stabilityai/sd-vae-ft-mse)
 - if train: [stable-diffusion-v1-5/stable-diffusion-v1-5](https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5), if test: [SG161222/Realistic_Vision_V4.0_noVAE](https://huggingface.co/SG161222/Realistic_Vision_V4.0_noVAE)
 - [h94/IP-Adapter](https://huggingface.co/h94/IP-Adapter)
