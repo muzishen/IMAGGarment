@@ -86,6 +86,6 @@ If you find IMAGGarment-1 useful for your research and applications, please cite
 - [x] Inference Code
 - [ ] GarmentBench Dataset
 - [x] Model Weights
-- [ ] Upgraded Version for High-resolution Image
+- [ ] Upgraded Version for High-resolution Images
 ## 📨 Contact
 If you have any questions, please feel free to contact with us at shenfei140721@126.com, jianyu@njust.edu.cn.
