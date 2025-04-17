@@ -2,15 +2,15 @@
 
 ## 🗓️ Release
 
-- [2025/4/16] 🎉 We release the train and inference code of IMAGGarment-1.
+- [2025/4/17] 🎉 We release the train and inference code of IMAGGarment-1.
 
-##  IMAGGarment-1: Controllable Fashion Design
+## 💡 Introduction
+IMAGGarment-1 addresses the challenges of multi-conditional controllability in personalized fashion design and digital apparel applications.
+Specifically, IMAGGarment-1 employs a two-stage training strategy to separately model global appearance and local details, while enabling unified and controllable generation through end-to-end inference.
+In the first stage, we propose a global appearance model that jointly encodes silhouette and color using a mixed attention module and a color adapter.
+In the second stage, we present a local enhancement model with an adaptive appearance-aware module to inject user-defined logos and spatial constraints, enabling accurate placement and visual consistency.
+![architecture](./assets/architecture.png)
 
-
-### 🔑 Key Parts:
-1.
-2.
-3.
 ## 🚀 Dataset Demo
 ![dataset_demo](./assets/dataset_sample_v4.png)
 ## 🚀 Examples
@@ -21,10 +21,6 @@
   <img src="./assets/appendix1-1.png" alt="results_2" width="400" height="400"/>
 </div>
 
-## 💡 Introduction
-
-IMAGGarment-1 addresses the challenges of multi-conditional controllability in personalized fashion design and digital apparel applications. Speciffcally, IMAGGarment-1 employs a two-stage training strategy to separately model global appearance and local details, while enabling uniffed and controllable generation through end-to-end inference. In the ffrst stage, we propose a global appearance model that jointly encodes silhouette and color using a mixed attention module and a color adapter. In the second stage, we present a local enhancement model with an adaptive appearance-aware module to inject user-deffned logos and spatial constraints, enabling accurate placement and visual consistency. 
-![architecture](./assets/architecture.png)
 ## 🔧 Requirements
 
 - Python>=3.8
@@ -52,6 +48,8 @@ You can download our models from [百度云](). You can download the other compo
 # and modify the path in train_color_adapter.sh, train_stage1.sh and train_stage2.sh
 # train color adapter
 sh train_color_adapter.sh
+# Once training of color adapter is complete, you can convert the weights into the desired format.
+python change.py
 # train stage1 model
 sh train_stage1.sh
 # train stage2 model
