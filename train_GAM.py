@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 
 from adapter.resampler import Resampler
-from Logo_dataset import FGGDataset, collate_fn
+from GarmentBench_dataset import FGGDataset, collate_fn
 from adapter.attention_processor import LogoCacheSAttnProcessor2_0,  CAttnProcessor2_0, LogoRefSAttnProcessor2_0,LogoCacheCAttnProcessor2_0
 
 logger = get_logger(__name__)

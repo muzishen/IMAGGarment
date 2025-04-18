@@ -92,7 +92,7 @@ sh train_LEM.sh
 ```
 ## 🚀 How to test
 ```
-python inference_logo.py \
+python inference_IMAGGarment-1.py \
 --GAM_model_ckpt [GAM checkpoint] \
 --LEM_model_ckpt [LEM chekcpoint] \
 --sketch_path [your sketch path] \
