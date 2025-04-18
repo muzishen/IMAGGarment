@@ -2,7 +2,7 @@
 
 ## 🗓️ Release
 
-- [2025/4/17] 🎉 We release the train and inference code of IMAGGarment-1.
+- [2025/4/18] 🎉 We release the train and inference code of IMAGGarment-1.
 
 ## 💡 Introduction
 IMAGGarment-1 addresses the challenges of multi-conditional controllability in personalized fashion design and digital apparel applications.
