@@ -90,7 +90,7 @@ python inference_logo.py \
 --device [your device]
 ```
 ## Acknowledgement
-We would like to thank the contributors to the [IMAGDressing](https://github.com/muzishen/IMAGDressing),[IP-Adapter](https://github.com/tencent-ailab/IP-Adapter) and [CatVTON](https://github.com/Zheng-Chong/CatVTON) repositories, for their open research and exploration.
+We would like to thank the contributors to the [IMAGDressing](https://github.com/muzishen/IMAGDressing) and [IP-Adapter](https://github.com/tencent-ailab/IP-Adapter) repositories, for their open research and exploration.
 
 The IMAGGarment code is available for both academic and commercial use. Users are permitted to generate images using this tool, provided they comply with local laws and exercise responsible use. The developers disclaim all liability for any misuse or unlawful activity by users.
 ## Citation
