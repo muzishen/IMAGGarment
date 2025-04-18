@@ -94,8 +94,15 @@ We would like to thank the contributors to the [IMAGDressing](https://github.com
 
 The IMAGGarment code is available for both academic and commercial use. Users are permitted to generate images using this tool, provided they comply with local laws and exercise responsible use. The developers disclaim all liability for any misuse or unlawful activity by users.
 ## Citation
-If you find IMAGGarment-1 useful for your research and applications, please cite using this BibTeX:
-```
+If you find IMAGDressing-v1 useful for your research and applications, please cite using this BibTeX:
+
+```bibtex
+@article{shen2025IMAGGarment-1,
+  title={IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design},
+  author={Shen, Fei and Yu, Jian and Wang, Cong and Jiang, Xin and Du, Xiaoyu and Tang, Jinhui},
+  booktitle={arXiv preprint arXiv:2504.13176},
+  year={2024}
+}
 ```
 ## 🕒 TODO List
 - [x] Paper
