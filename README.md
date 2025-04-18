@@ -101,7 +101,7 @@ If you find IMAGDressing-v1 useful for your research and applications, please ci
   title={IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design},
   author={Shen, Fei and Yu, Jian and Wang, Cong and Jiang, Xin and Du, Xiaoyu and Tang, Jinhui},
   booktitle={arXiv preprint arXiv:2504.13176},
-  year={2024}
+  year={2025}
 }
 ```
 ## 🕒 TODO List
