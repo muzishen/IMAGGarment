@@ -127,4 +127,4 @@ If you find IMAGDressing-v1 useful for your research and applications, please ci
 - [x] Model Weights
 - [ ] Upgraded Version for High-resolution Images
 ## 📨 Contact
-If you have any questions, please feel free to contact with us at shenfei140721@126.com, jianyu@njust.edu.cn.
+If you have any questions, please feel free to contact with us at shenfei140721@126.com and jianyu@njust.edu.cn.
