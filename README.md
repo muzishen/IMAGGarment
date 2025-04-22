@@ -16,17 +16,6 @@
 - [2025/4/17] 🎉 We launch the [project page](https://revive234.github.io/imaggarment.github.io/) of IMAGGarment-1.
 
 
-<<<<<<< HEAD
----
-
-## IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design
-<a href='https://revive234.github.io/imaggarment.github.io/'><img src='https://img.shields.io/badge/Project-Page-green'></a>
-<a href='https://arxiv.org/pdf/2504.13176'><img src='https://img.shields.io/badge/Technique-Report-red'></a>
-<a href='https://huggingface.co/keimen/IMAGGarment'><img src='https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Model-blue'></a>
-<a href='https://huggingface.co/datasets/IMAGDressing/IGPair'><img src='https://img.shields.io/badge/Dataset-GarmentBench-orange'></a>
-[![GitHub stars](https://img.shields.io/github/stars/muzishen/IMAGGarment-1?style=social)](https://github.com/muzishen/IMAGGarment-1)
-=======
->>>>>>> cd22b278be93e082a43afdcd3732133bfb28b932
 
 
 
