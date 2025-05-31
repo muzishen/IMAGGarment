@@ -1,4 +1,4 @@
-### FashionCloth-v1
+### GarmentBench dataset
 #### Overview
 FashionCloth includes 189,966 garments.For each garment,there is a corresponding sketch.For different tasks, we divide different datasets.For the three tasks of clothing synthesis, logo customization, and color personalization,the dataset has 189,966,  11,632 and 45,317 image pairs, respectively.And we provide 1,267 image pairs for test.
 
