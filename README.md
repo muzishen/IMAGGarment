@@ -127,5 +127,13 @@ If you find IMAGDressing-v1 useful for your research and applications, please ci
 - [ ] GarmentBench Dataset
 - [x] Model Weights
 - [ ] Upgraded Version for High-resolution Images
+
+## 👉 **My other projects:**  
+- [IMAGDressing](https://github.com/muzishen/IMAGDressing): Interactive modular apparel generation; virtual dressing.  
+- [IMAGHarmony](https://github.com/muzishen/IMAGHarmony): Controllable image editing with consistent object layout.  
+- [IMAGPose](https://github.com/muzishen/IMAGPose): Pose-guided person generation with high fidelity.  
+- [RCDMs](https://github.com/muzishen/RCDMs): Rich-contextual conditional diffusion for story visualization.  
+- [PCDMs](https://github.com/tencent-ailab/PCDMs): Progressive conditional diffusion for pose-guided image synthesis.
+
 ## 📨 Contact
 If you have any questions, please feel free to contact with us at shenfei140721@126.com and jianyu@njust.edu.cn.
