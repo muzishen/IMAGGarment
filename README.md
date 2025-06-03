@@ -113,7 +113,7 @@ The IMAGGarment code is available for both academic and commercial use. Users ar
 If you find IMAGDressing-v1 useful for your research and applications, please cite using this BibTeX:
 
 ```bibtex
-@article{shen2025IMAGGarment-1,
+@article{shen2025imaggarment,
   title={IMAGGarment-1: Fine-Grained Garment Generation for Controllable Fashion Design},
   author={Shen, Fei and Yu, Jian and Wang, Cong and Jiang, Xin and Du, Xiaoyu and Tang, Jinhui},
   booktitle={arXiv preprint arXiv:2504.13176},
