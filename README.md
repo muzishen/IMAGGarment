@@ -25,14 +25,14 @@ IMAGGarment-1 addresses the challenges of multi-conditional controllability in p
 Specifically, IMAGGarment-1 employs a two-stage training strategy to separately model global appearance and local details, while enabling unified and controllable generation through end-to-end inference.
 In the first stage, we propose a global appearance model that jointly encodes silhouette and color using a mixed attention module and a color adapter.
 In the second stage, we present a local enhancement model with an adaptive appearance-aware module to inject user-defined logos and spatial constraints, enabling accurate placement and visual consistency.
-![architecture](./assets/architecture.png)
+![architecture](./assets/architecture.jpg)
 
 ## 🚀 Dataset Demo
 
-![dataset_demo](./assets/dataset_sample_v4-1.png)
+![dataset_demo](./assets/dataset_sample.jpg)
 ## 🚀 Examples
 
-![results_1](./assets/introductionv3.png)
+![results_1](./assets/introduction.jpg)
 
 
 ### Different Colors and Silhouettes
