@@ -10,7 +10,7 @@
 
 
 ## 🗓️ Release
-
+- [2026/3/4] 🔥 IMAGGarment is accepted by TVCG 2026.
 - [2025/4/18] 🔥 We released the [technical report](https://arxiv.org/pdf/2504.13176) of IMAGGarment.
 - [2025/4/18] 🔥 We release the train and inference code of IMAGGarment.
 - [2025/4/17] 🎉 We launch the [project page](https://revive234.github.io/imaggarment.github.io/) of IMAGGarment.
