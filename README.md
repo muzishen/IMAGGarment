@@ -21,8 +21,8 @@
 
 
 ## 💡 Introduction
-IMAGGarment-1 addresses the challenges of multi-conditional controllability in personalized fashion design and digital apparel applications.
-Specifically, IMAGGarment-1 employs a two-stage training strategy to separately model global appearance and local details, while enabling unified and controllable generation through end-to-end inference.
+IMAGGarment addresses the challenges of multi-conditional controllability in personalized fashion design and digital apparel applications.
+Specifically, IMAGGarment employs a two-stage training strategy to separately model global appearance and local details, while enabling unified and controllable generation through end-to-end inference.
 In the first stage, we propose a global appearance model that jointly encodes silhouette and color using a mixed attention module and a color adapter.
 In the second stage, we present a local enhancement model with an adaptive appearance-aware module to inject user-defined logos and spatial constraints, enabling accurate placement and visual consistency.
 ![architecture](./assets/architecture.jpg)
